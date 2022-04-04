@@ -14,8 +14,8 @@ public class TokenService {
 
     private final TokenRepository tokenRepository;
 
-    public void saveToken(Token token){
-        tokenRepository.save(token);
+    public Long saveToken(Token token){
+        return tokenRepository.save(token).getId();
     }
 
     public Optional<Token> getToken(String payload){
