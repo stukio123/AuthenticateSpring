@@ -1,29 +1,22 @@
 package com.example.userservice.Services;
 
-import com.example.userservice.Models.SignUpRequest;
-import com.example.userservice.Repositories.TokenRepository;
-import com.example.userservice.Repositories.UserRepository;
+import com.example.userservice.DTO.UserDTO;
+import com.example.userservice.Models.ResponseMessages;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.HttpStatus;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.Closeable;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -33,36 +26,46 @@ public class SignUpServiceTest {
 
     private Closeable closeable;
 
-    @Spy
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
     @Mock
     private TokenService tokenService;
-    @Mock
-    private UserService userService;
 
     @InjectMocks
-    private SignUpService signUpService;
+    private UserService userService;
 
-    private SignUpRequest signUpRequest;
+    private UserDTO signUpRequest = new UserDTO(
+            "abc",
+            "yxz",
+            "abcxyz@gmail.com",
+            "Abc Xyz"
+    );
 
     @Before
     public void setUp() throws Exception{
         MockitoAnnotations.initMocks(this);
-        bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        this.signUpRequest = new SignUpRequest(
-                "abc",
-                "yxz",
-                "abcxyz@gmail.com",
-                "Abc Xyz"
-        );
     }
 
     @Test
     public void signUp() {
-        String payload = UUID.randomUUID().toString();
-        Mockito.when(signUpService.signUp(this.signUpRequest)).thenReturn(payload);
-        assertEquals(payload,signUpService.signUp(signUpRequest));
+        ResponseMessages expected =  new ResponseMessages();
+        expected.setMessages("Sign Up Sucessful !!");
+        expected.setCode(HttpStatus.CREATED.name());
+        ResponseMessages actual = new ResponseMessages();
+        actual = userService.signUp(signUpRequest);
+        assertEquals(expected,actual);
+        assertNotNull(actual);
+    }
+
+    @Test
+    public void test_SignUpAccountAlreadyExist(){
+        ResponseMessages expected =  new ResponseMessages();
+        expected.setMessages(String.format("%s already exist",signUpRequest.getUsername()));
+        expected.setCode(HttpStatus.NOT_ACCEPTABLE.name());
+        ResponseMessages actual = new ResponseMessages();
+        actual = userService.signUp(signUpRequest);
+        ResponseMessages actual1 = new ResponseMessages();
+        actual1 = userService.signUp(signUpRequest);
+        assertEquals(expected,actual1);
+        assertNull(actual1);
     }
 
     @Test

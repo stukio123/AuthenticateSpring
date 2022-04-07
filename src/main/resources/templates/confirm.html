@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Account Confirmation</title>
+</head>
+<body>
+    <h1 th:text="${messages}">messages</h1>
+
+    <h1>Your infomation</h1>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Name</th>
+        </tr>
+        <tr >
+            <td><span th:text="${user.getUsername()}">Username</span></td>
+            <td><span th:text="${user.getEmail()}">Email</span></td>
+            <td><span th:text="${user.getName()}">Name</span></td>
+        </tr>
+    </table>
+</body>
+</html>

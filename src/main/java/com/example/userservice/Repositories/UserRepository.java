@@ -23,4 +23,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Modifying
     @Query("UPDATE User u SET u.enabled = TRUE WHERE u.username = ?1")
     int enableUser(String username);
+
+    @Query("SELECT u FROM Token t LEFT JOIN t.user u WHERE t.payload = ?1")
+    Optional<User> findUserByToken(String token);
 }

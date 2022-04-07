@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 8080
   error:
     include-message: always
     include-binding-errors: always
@@ -19,6 +19,17 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+
+  session:
+    jdbc:
+      initialize-schema: always
+
+  thymeleaf:
+    cache: false
+    suffix: .html
+    prefix: classpath:/templates/
+    enabled: true
+
 
 #  mail:
 #    host: localhost

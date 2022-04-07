@@ -1,37 +1,37 @@
 package com.example.userservice.Controllers;
 
-import com.example.userservice.Models.SignInRequest;
-import com.example.userservice.Models.SignUpRequest;
-import com.example.userservice.Services.SignInService;
-import com.example.userservice.Services.SignUpService;
+import com.example.userservice.DTO.UserDTO;
+import com.example.userservice.Models.ResponseMessages;
+import com.example.userservice.Services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Primary;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/users")
 @AllArgsConstructor
+@Primary
 public class UserControllers {
+    private final UserService userService;
 
-    private final SignUpService signUpService;
-    private final SignInService signInService;
-
-    @GetMapping(value={"","/"})
+    @GetMapping(value={"api/v1/users","api/v1/users/"})
     public String HelloWord(){
         return "Hello World";
     }
 
-    @PostMapping(value={"/registration"})
-    public String signUp(@RequestBody SignUpRequest request){
-        return signUpService.signUp(request);
+    @PostMapping(value={"api/v1/users/registration"})
+    public ResponseMessages signUp(@RequestBody UserDTO request){
+        return userService.signUp(request);
     }
 
-    @GetMapping(path="/registration/confirm")
+    @GetMapping(path="api/v1/users/registration/confirm")
     public String confirmSignUp(@RequestParam("token") String token){
-        return signUpService.confirmToken(token);
+        return userService.confirmToken(token);
     }
 
-    @PostMapping("/signIn")
-    public String signIn(@RequestBody SignInRequest request){
-        return signInService.signIn(request);
+    @PostMapping("api/v1/users/signIn")
+    public String signIn(@RequestBody UserDTO request){
+        return userService.signIn(request);
     }
+
 }
